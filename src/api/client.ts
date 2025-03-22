@@ -4,8 +4,6 @@ const API_URL = 'http://localhost:8000';
 
 export interface DocumentInfo {
     document_id: string;
-    pdf_url: string;
-    markdown_url: string;
     created_at: string;
     size_bytes: number;
 }
@@ -21,8 +19,6 @@ export const api = {
     uploadDocument: async (file: File): Promise<{
         message: string;
         document_id: string;
-        pdf_url: string;
-        markdown_url: string;
     }> => {
         const formData = new FormData();
         formData.append('file', file);
@@ -33,5 +29,13 @@ export const api = {
             },
         });
         return response.data;
+    },
+
+    getPdfUrl: (documentId: string): string => {
+        return `${API_URL}/documents/${documentId}/pdf`;
+    },
+
+    getMarkdownUrl: (documentId: string): string => {
+        return `${API_URL}/documents/${documentId}/markdown`;
     }
 }; 
