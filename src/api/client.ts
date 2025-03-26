@@ -47,11 +47,17 @@ export const api = {
         return response.data;
     },
 
-    getPdfUrl: (documentId: string): string => {
-        return `${API_URL}/documents/${documentId}/pdf`;
+    downloadPdf: async (documentId: string): Promise<Blob> => {
+        const response = await axiosInstance.get(`/documents/${documentId}/pdf`, {
+            responseType: 'blob'
+        });
+        return response.data;
     },
 
-    getMarkdownUrl: (documentId: string): string => {
-        return `${API_URL}/documents/${documentId}/markdown`;
+    downloadMarkdown: async (documentId: string): Promise<Blob> => {
+        const response = await axiosInstance.get(`/documents/${documentId}/markdown`, {
+            responseType: 'blob'
+        });
+        return response.data;
     }
 }; 

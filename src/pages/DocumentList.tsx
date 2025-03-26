@@ -9,6 +9,17 @@ export default function DocumentList() {
         queryFn: () => api.listDocuments()
     });
 
+    const handleDownload = async (blob: Blob, filename: string) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    };
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -65,24 +76,28 @@ export default function DocumentList() {
                                     {(doc.size_bytes / 1024).toFixed(2)} KB
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a
-                                        href={api.getPdfUrl(doc.document_id)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <button
+                                        onClick={async () => {
+                                            const blob = await api.downloadPdf(doc.document_id);
+                                            handleDownload(blob, `${doc.document_id}.pdf`);
+                                        }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
-                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '24px', height: '24px' }} />
-                                    </a>
+                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                        <span className="ml-1">PDF</span>
+                                    </button>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a
-                                        href={api.getMarkdownUrl(doc.document_id)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <button
+                                        onClick={async () => {
+                                            const blob = await api.downloadMarkdown(doc.document_id);
+                                            handleDownload(blob, `${doc.document_id}.md`);
+                                        }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
-                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '24px', height: '24px' }} />
-                                    </a>
+                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                        <span className="ml-1">MD</span>
+                                    </button>
                                 </td>
                             </tr>
                         ))}
