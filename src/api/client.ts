@@ -22,6 +22,12 @@ export interface DocumentInfo {
     document_id: string;
     created_at: string;
     size_bytes: number;
+    original_filename: string;
+}
+
+interface DownloadResponse {
+    blob: Blob;
+    filename: string;
 }
 
 export const api = {
@@ -47,17 +53,45 @@ export const api = {
         return response.data;
     },
 
-    downloadPdf: async (documentId: string): Promise<Blob> => {
+    downloadPdf: async (documentId: string): Promise<DownloadResponse> => {
         const response = await axiosInstance.get(`/documents/${documentId}/pdf`, {
             responseType: 'blob'
         });
-        return response.data;
+        
+        const contentDisposition = response.headers['content-disposition'];
+        let filename = `${documentId}.pdf`;
+        
+        if (contentDisposition) {
+            const matches = /filename="(.+)"/.exec(contentDisposition);
+            if (matches && matches[1]) {
+                filename = matches[1];
+            }
+        }
+        
+        return {
+            blob: response.data,
+            filename
+        };
     },
 
-    downloadMarkdown: async (documentId: string): Promise<Blob> => {
+    downloadMarkdown: async (documentId: string): Promise<DownloadResponse> => {
         const response = await axiosInstance.get(`/documents/${documentId}/markdown`, {
             responseType: 'blob'
         });
-        return response.data;
+        
+        const contentDisposition = response.headers['content-disposition'];
+        let filename = `${documentId}.md`;
+        
+        if (contentDisposition) {
+            const matches = /filename="(.+)"/.exec(contentDisposition);
+            if (matches && matches[1]) {
+                filename = matches[1];
+            }
+        }
+        
+        return {
+            blob: response.data,
+            filename
+        };
     }
 }; 

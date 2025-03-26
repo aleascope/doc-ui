@@ -47,7 +47,7 @@ export default function DocumentList() {
                     <thead className="bg-gray-50">
                         <tr>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Document ID
+                                File Name
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Created At
@@ -65,9 +65,9 @@ export default function DocumentList() {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {documents?.map((doc: DocumentInfo) => (
-                            <tr key={doc.document_id} className="hover:bg-gray-50">
+                            <tr key={doc.original_filename} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {doc.document_id}
+                                    {doc.original_filename}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {new Date(doc.created_at).toLocaleDateString()}
@@ -78,8 +78,8 @@ export default function DocumentList() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                                     <button
                                         onClick={async () => {
-                                            const blob = await api.downloadPdf(doc.document_id);
-                                            handleDownload(blob, `${doc.document_id}.pdf`);
+                                            const { blob, filename } = await api.downloadPdf(doc.document_id);
+                                            handleDownload(blob, filename);
                                         }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
@@ -90,8 +90,8 @@ export default function DocumentList() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                                     <button
                                         onClick={async () => {
-                                            const blob = await api.downloadMarkdown(doc.document_id);
-                                            handleDownload(blob, `${doc.document_id}.md`);
+                                            const { blob, filename } = await api.downloadMarkdown(doc.document_id);
+                                            handleDownload(blob, filename);
                                         }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
