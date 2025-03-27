@@ -57,6 +57,14 @@ export const api = {
         return response.data;
     },
 
+    deleteDocument: async (documentId: string): Promise<{
+        message: string;
+        document_id: string;
+    }> => {
+        const response = await axiosInstance.delete(`/documents/${documentId}`);
+        return response.data;
+    },
+
     downloadSource: async (documentId: string): Promise<DownloadResponse> => {
         const response = await axiosInstance.get(`/documents/${documentId}/source`, {
             responseType: 'blob'
