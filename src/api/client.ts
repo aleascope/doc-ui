@@ -20,9 +20,13 @@ axiosInstance.interceptors.request.use(async (config) => {
 
 export interface DocumentInfo {
     document_id: string;
+    file_name: string;
+    file_extension: string;
+    file_type: string | null;
+    is_parsed: boolean;
+    is_indexed: boolean;
     created_at: string;
     size_bytes: number;
-    original_filename: string;
 }
 
 interface DownloadResponse {
@@ -53,13 +57,13 @@ export const api = {
         return response.data;
     },
 
-    downloadPdf: async (documentId: string): Promise<DownloadResponse> => {
-        const response = await axiosInstance.get(`/documents/${documentId}/pdf`, {
+    downloadSource: async (documentId: string): Promise<DownloadResponse> => {
+        const response = await axiosInstance.get(`/documents/${documentId}/source`, {
             responseType: 'blob'
         });
         
         const contentDisposition = response.headers['content-disposition'];
-        let filename = `${documentId}.pdf`;
+        let filename = `${documentId}`;  // Extension will be determined by the server
         
         if (contentDisposition) {
             const matches = /filename="(.+)"/.exec(contentDisposition);
@@ -74,8 +78,8 @@ export const api = {
         };
     },
 
-    downloadMarkdown: async (documentId: string): Promise<DownloadResponse> => {
-        const response = await axiosInstance.get(`/documents/${documentId}/markdown`, {
+    downloadParsed: async (documentId: string): Promise<DownloadResponse> => {
+        const response = await axiosInstance.get(`/documents/${documentId}/parsed`, {
             responseType: 'blob'
         });
         

@@ -56,18 +56,18 @@ export default function DocumentList() {
                                 Size
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                PDF
+                                Source
                             </th>
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Markdown
+                                Parsed
                             </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                         {documents?.map((doc: DocumentInfo) => (
-                            <tr key={doc.original_filename} className="hover:bg-gray-50">
+                            <tr key={doc.file_name} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {doc.original_filename}
+                                    {doc.file_name}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {new Date(doc.created_at).toLocaleDateString()}
@@ -78,22 +78,27 @@ export default function DocumentList() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                                     <button
                                         onClick={async () => {
-                                            const { blob, filename } = await api.downloadPdf(doc.document_id);
+                                            const { blob, filename } = await api.downloadSource(doc.document_id);
                                             handleDownload(blob, filename);
                                         }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
                                         <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
-                                        <span className="ml-1">PDF</span>
+                                        <span className="ml-1">{doc.file_extension.toUpperCase()}</span>
                                     </button>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                                     <button
                                         onClick={async () => {
-                                            const { blob, filename } = await api.downloadMarkdown(doc.document_id);
+                                            const { blob, filename } = await api.downloadParsed(doc.document_id);
                                             handleDownload(blob, filename);
                                         }}
-                                        className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
+                                        disabled={!doc.is_parsed}
+                                        className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded ${
+                                            doc.is_parsed 
+                                                ? 'text-blue-600 hover:text-blue-900 hover:bg-blue-50' 
+                                                : 'text-gray-400 cursor-not-allowed'
+                                        }`}
                                     >
                                         <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
                                         <span className="ml-1">MD</span>
