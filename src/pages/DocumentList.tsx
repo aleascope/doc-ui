@@ -1,12 +1,24 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api, DocumentInfo } from '../api/client';
 import { Link } from 'react-router-dom';
-import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 export default function DocumentList() {
+    const queryClient = useQueryClient();
+    const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
     const { data: documents, isLoading, error } = useQuery({
         queryKey: ['documents'],
         queryFn: () => api.listDocuments()
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (documentId: string) => api.deleteDocument(documentId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['documents'] });
+            setDeleteConfirmId(null);
+        },
     });
 
     const handleDownload = async (blob: Blob, filename: string) => {
@@ -61,6 +73,9 @@ export default function DocumentList() {
                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Parsed
                             </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -103,6 +118,31 @@ export default function DocumentList() {
                                         <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
                                         <span className="ml-1">MD</span>
                                     </button>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                    {deleteConfirmId === doc.document_id ? (
+                                        <div className="flex space-x-2">
+                                            <button
+                                                onClick={() => deleteMutation.mutate(doc.document_id)}
+                                                className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                                            >
+                                                Confirm
+                                            </button>
+                                            <button
+                                                onClick={() => setDeleteConfirmId(null)}
+                                                className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            onClick={() => setDeleteConfirmId(doc.document_id)}
+                                            className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
+                                        >
+                                            <TrashIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
