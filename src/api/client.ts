@@ -29,6 +29,14 @@ export interface DocumentInfo {
     size_bytes: number;
 }
 
+export interface UserInfo {
+    clerk_id: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    created_at: string;
+}
+
 interface DownloadResponse {
     blob: Blob;
     filename: string;
@@ -105,5 +113,19 @@ export const api = {
             blob: response.data,
             filename
         };
+    },
+
+    listUsers: async (): Promise<UserInfo[]> => {
+        const response = await axiosInstance.get('/users/');
+        return response.data;
+    },
+
+    deleteUser: async (userId: string): Promise<{
+        message: string;
+        user_id: string;
+        email: string;
+    }> => {
+        const response = await axiosInstance.delete(`/users/${userId}`);
+        return response.data;
     }
 }; 

@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import DocumentList from './pages/DocumentList';
 import UploadDocument from './pages/UploadDocument';
 import Home from './pages/Home';
+import UserList from './pages/UserList';
 import './App.css'
 
 const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/list" element={<DocumentList />} />
             <Route path="/upload" element={<UploadDocument />} />
+            <Route path="/users" element={<UserList />} />
           </Routes>
         </div>
       </Router>
