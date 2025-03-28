@@ -98,7 +98,7 @@ export default function DocumentList() {
                                         }}
                                         className="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded"
                                     >
-                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                        <ArrowDownTrayIcon className="w-4 h-4" style={{ width: '16px', height: '16px' }} />
                                         <span className="ml-1">{doc.file_extension.toUpperCase()}</span>
                                     </button>
                                 </td>
@@ -115,7 +115,7 @@ export default function DocumentList() {
                                                 : 'text-gray-400 cursor-not-allowed'
                                         }`}
                                     >
-                                        <ArrowDownTrayIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                        <ArrowDownTrayIcon className="w-4 h-4" style={{ width: '16px', height: '16px' }} />
                                         <span className="ml-1">MD</span>
                                     </button>
                                 </td>
@@ -140,7 +140,7 @@ export default function DocumentList() {
                                             onClick={() => setDeleteConfirmId(doc.document_id)}
                                             className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-900 hover:bg-red-50 rounded"
                                         >
-                                            <TrashIcon className="w-3 h-3" style={{ width: '12px', height: '12px' }} />
+                                            <TrashIcon className="w-4 h-4" style={{ width: '16px', height: '16px' }} />
                                         </button>
                                     )}
                                 </td>
