@@ -30,12 +30,19 @@ const Home = () => {
                         >
                             View Documents
                         </Link>
-                        
+                        <br/>
                         <Link
                             to="/upload"
                             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                         >
                             Upload Document
+                        </Link>
+                        <br/>
+                        <Link
+                            to="/users"
+                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                        >
+                            Manage Users
                         </Link>
                     </div>
                 )}
